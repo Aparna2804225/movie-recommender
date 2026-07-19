@@ -1,86 +1,266 @@
-# Movie Recommendation Dataset Collector
+# 🎬 Movie Recommendation Dataset Collector
 
-A Flask web app to collect real-time movie review data from friends for your AIML recommendation system project.
+A lightweight Flask web application for collecting **real-time movie reviews and ratings** from multiple users. The collected dataset can be directly used for building and training **Machine Learning** and **Recommendation System** models such as Collaborative Filtering, Content-Based Filtering, or Hybrid Recommenders.
 
-## Project Structure
+---
+
+# ✨ Features
+
+- 🎥 Submit movie reviews through a clean web interface
+- ⭐ Rate movies from 1–5 stars
+- 📝 Write detailed reviews
+- 😊 Add mood tags (Happy, Emotional, Thriller, etc.)
+- 🎭 Select genres and streaming platforms
+- 👍 Recommend or not recommend the movie
+- 👥 Supports multiple users
+- 📊 Live response statistics
+- 📥 Export complete dataset as CSV
+- 💾 SQLite database (no external database required)
+- 🚀 Easy deployment on Render or Heroku
+
+---
+
+# 📂 Project Structure
+
 ```
 movie-recommender/
-├── app.py              # Flask backend + SQLite DB
-├── requirements.txt    # Python dependencies
-├── Procfile            # Render/Heroku start command
+│
+├── app.py                 # Flask application
+├── requirements.txt       # Python dependencies
+├── Procfile               # Deployment configuration
 ├── README.md
-└── templates/
-    └── index.html      # Full frontend form
+│
+├── templates/
+│   └── index.html         # Frontend UI
+│
+└── movie_reviews.db       # SQLite database (created automatically)
 ```
 
 ---
 
-## Deploy to Render (Free) — Step by Step
+# 🛠 Technologies Used
 
-### Step 1: Push to GitHub
-1. Create a new repo at https://github.com/new (name it `movie-recommender`)
-2. Upload all files from this folder to that repo (drag & drop works)
-
-### Step 2: Deploy on Render
-1. Go to https://render.com and sign up (free)
-2. Click **New → Web Service**
-3. Connect your GitHub account → select your `movie-recommender` repo
-4. Fill in settings:
-   - **Name**: movie-recommender (or any name)
-   - **Runtime**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-   - **Instance Type**: Free
-5. Click **Create Web Service**
-6. Wait ~2 minutes for build
-
-### Step 3: Share the link!
-Render gives you a URL like: `https://movie-recommender-xxxx.onrender.com`
-Share this with your friends — everyone's responses go to the same database!
+- Python
+- Flask
+- SQLite
+- HTML5
+- CSS3
+- JavaScript
+- Pandas (for analysis)
 
 ---
 
-## Features
-- Real-time response counter (auto-refreshes every 15 seconds)
-- SQLite database (persists on Render's disk)
-- Export all data as CSV with one click
-- Fields: User ID, Movie Name, Rating (1-5★), Genre, Platform, Mood Tags, Recommend, Review
+# 🚀 Getting Started
 
-## Export Data for ML
-Visit `/api/export` or click the **Export CSV** button in the Dataset tab.
+## 1. Clone Repository
 
-CSV columns:
-```
-id, timestamp, user_id, movie_name, rating, genres, platform, moods, recommend, review
+```bash
+git clone https://github.com/yourusername/movie-recommender.git
+
+cd movie-recommender
 ```
 
-## Load Data in Python
+---
+
+## 2. Create Virtual Environment
+
+### Windows
+
+```bash
+python -m venv venv
+
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+python3 -m venv venv
+
+source venv/bin/activate
+```
+
+---
+
+## 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 4. Run the Application
+
+```bash
+python app.py
+```
+
+Open your browser:
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+# 🌐 Deploy on Render
+
+## Step 1
+
+Push the project to GitHub.
+
+## Step 2
+
+Create a **New Web Service** on Render.
+
+### Build Command
+
+```bash
+pip install -r requirements.txt
+```
+
+### Start Command
+
+```bash
+gunicorn app:app
+```
+
+Choose the **Free Instance** and deploy.
+
+After deployment you'll receive a URL like
+
+```
+https://movie-recommender.onrender.com
+```
+
+Share this link with friends so everyone contributes to the same dataset.
+
+---
+
+# 📊 Dataset Schema
+
+Each submission stores the following information:
+
+| Field | Description |
+|--------|-------------|
+| id | Auto-generated ID |
+| timestamp | Submission time |
+| user_id | User identifier |
+| movie_name | Movie title |
+| rating | Rating (1–5) |
+| genres | Selected genres |
+| platform | OTT platform |
+| moods | Mood tags |
+| recommend | Yes / No |
+| review | User review |
+
+---
+
+# 📡 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Main web interface |
+| `/api/submit` | POST | Submit movie review |
+| `/api/stats` | GET | Live statistics |
+| `/api/export` | GET | Download CSV dataset |
+
+---
+
+# 📥 Export Dataset
+
+Download the complete dataset by visiting:
+
+```
+/api/export
+```
+
+or by clicking the **Export CSV** button in the application.
+
+---
+
+# 📈 Using the Dataset for Machine Learning
+
 ```python
 import pandas as pd
 
 df = pd.read_csv("movie_dataset.csv")
 
-# Quick analysis
-print(df.groupby("movie_name")["rating"].mean().sort_values(ascending=False))
+# Average movie ratings
+print(df.groupby("movie_name")["rating"].mean())
+
+# Recommendation count
 print(df["recommend"].value_counts())
 
-# For collaborative filtering
-pivot = df.pivot_table(index="user_id", columns="movie_name", values="rating")
+# User-Movie matrix
+pivot = df.pivot_table(
+    index="user_id",
+    columns="movie_name",
+    values="rating"
+)
+
 print(pivot)
 ```
 
-## API Endpoints
-| Endpoint | Method | Description |
-|---|---|---|
-| `/` | GET | Main form UI |
-| `/api/submit` | POST | Submit a response |
-| `/api/stats` | GET | Live stats + recent 50 rows |
-| `/api/export` | GET | Download full CSV |
+---
+
+# 🧠 Ideal Use Cases
+
+- Collaborative Filtering
+- Content-Based Recommendation
+- Hybrid Recommendation Systems
+- Data Mining Projects
+- Machine Learning Coursework
+- Sentiment Analysis
+- User Preference Analysis
 
 ---
 
-## Tips for Better Dataset
-- Ask 20+ friends to fill it
-- Encourage multiple submissions (different movies)
-- Keep movie names consistent (use exact titles)
-- Collect at least 5 ratings per movie for meaningful recommendations
+# 📊 Recommended Dataset Size
+
+For better recommendation performance:
+
+- 👥 20–100 users
+- 🎬 100+ unique movies
+- ⭐ At least 5–10 ratings per movie
+- 📝 Encourage detailed reviews
+- 🎭 Keep movie titles consistent
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+You can improve the project by:
+
+- Adding authentication
+- Improving UI/UX
+- Supporting movie posters
+- Integrating TMDB API
+- Adding analytics dashboard
+- Docker support
+- Recommendation visualization
+
+---
+
+# 📄 License
+
+This project is released under the MIT License.
+
+Feel free to use, modify, and distribute it for educational or personal projects.
+
+---
+
+# ⭐ Support
+
+If you found this project helpful:
+
+⭐ Star the repository
+
+🍴 Fork it
+
+📢 Share it with your friends
+
+Your contributions help create a larger and better movie recommendation dataset.
